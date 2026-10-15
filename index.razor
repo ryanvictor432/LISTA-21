@@ -1,0 +1,44 @@
+@page "/"
+@inject HttpClient Http
+
+<PageTitle>Lista de Usuários</PageTitle>
+
+<h1>Consumo de API - JsonPlaceHolder</h1>
+<p>Verifique o console do navegador para ver o resultado da impressão.</p>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // Consumindo o endpoint que retorna uma lista de usuários
+        var users = await Http.GetFromJsonAsync<List<User>>("https://jsonplaceholder.typicode.com/users");
+        
+        if (users != null && users.Count > 0)
+        {
+            // Pegando a PRIMEIRA pessoa retornada
+            var firstUser = users[0];
+            
+            // Imprimindo na tela do console os dados específicos
+            Console.WriteLine($"Nome: {firstUser.Name}");
+            Console.WriteLine($"Cidade: {firstUser.Address.City}");
+            Console.WriteLine($"Empresa: {firstUser.Company.Name}");
+        }
+    }
+
+    // Classes para mapear o retorno do JSON (Desserialização)
+    public class User
+    {
+        public string Name { get; set; }
+        public Address Address { get; set; }
+        public Company Company { get; set; }
+    }
+
+    public class Address
+    {
+        public string City { get; set; }
+    }
+
+    public class Company
+    {
+        public string Name { get; set; }
+    }
+}
